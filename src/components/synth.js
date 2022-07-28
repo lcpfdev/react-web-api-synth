@@ -31,6 +31,7 @@ const Synth = () => {
         <h1>{check}</h1>
         <button onClick={trianglePlay}>triangle</button>
         <button onClick={sawPlay}>square</button>
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange"></input>
         </div>
     );
 
