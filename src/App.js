@@ -32,11 +32,11 @@ function App() {
      
   }
 
-  // const changeOsc1Type = (e) => {
-  //   let {id} = e.target
-  //   console.log(id)
+  const changeOsc1Type = (e) => {
+    let {id} = e.target
+    console.log(id)
 
-  // }
+  }
 
 
 
@@ -50,7 +50,7 @@ function App() {
     freq={osc1Freq} 
     changeDetune={changeOsc1Detune}
     detune = {osc1Detune}
-    // changeType={osc1.}
+    changeType={changeOsc1Type}
     />
       
     </div>
