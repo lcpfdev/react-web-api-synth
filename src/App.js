@@ -2,41 +2,62 @@ import './App.css';
 import React from 'react';
 import { useState } from 'react';
 import Osc1 from './components/Osc1';
+import Filter from './components/Filter';
 
 const audioContext = new AudioContext(); // Allows us to use api
 const out = audioContext.destination; // Sets audio to output to speakers
 
 const osc1 = audioContext.createOscillator(); // creates osc  
 const gain1 = audioContext.createGain() // sets osc to gain 
+const  filter = audioContext.createBiquadFilter() // creates filter 
 
-osc1.connect(gain1);  // allows osc output
-gain1.connect(out);
+osc1.connect(gain1);  // allows osc output  osc - filter - out
+gain1.connect(filter); 
+filter.connect(out)// places filter between output on audio routing 
 
-
+ 
 function App() {
-  const [osc1Freq, setOsc1Freq] = useState(osc1.frequency.value)
-  const [osc1Detune, setOsc1Detune] = useState(osc1.detune.value) // Accessing what is has currently
+
+  const [osc1Settings, setOsc1Settings] = useState({
+    frequency: osc1.frequency.value,
+    detune:  osc1.detune.value,
+    type: osc1.type
+ 
+  })
+
+
+  const [filterSettings, setFilterSettings] = useState({
+    frequency: osc1.frequency.value,
+    detune:  osc1.detune.value,
+    Q: filter.Q.value,
+    gain: filter.gain.value,
+    type: filter.type
+  })
+
+  const changeFilter = e => {
+    let {value, id} = e.target;
+    setFilterSettings({...filterSettings, [id]: value})
+    filter[id].value = value
+  }
+
+
+  const changeOsc1 = (e) => {
+    let {value, id} = e.target
+    setOsc1Settings({...osc1Settings, [id]: value})
+    osc1[id].value = value;
+  }
+
+    
+  const changeOsc1Type = (e) => { 
+    let {id } = e.target
+    setOsc1Settings({...osc1Settings, type: id})
+     osc1.type = id; //type is just a string
+    
+
+  }
 
   
-  const changeOsc1Freq = (e) => {
-    let {value} = e.target // taking value,sets prop
-    setOsc1Freq(value);
-    osc1.frequency.value = value
-    // console.log(value)
-  }
 
-  const changeOsc1Detune = (e) => {
-    let {value} = e.target; // sets prop
-    setOsc1Detune(value)
-    osc1.detune.value = value 
-     
-  }
-
-  const changeOsc1Type = (e) => {
-    let {id} = e.target
-    console.log(id)
-
-  }
 
 
 
@@ -46,12 +67,15 @@ function App() {
     <button onClick={() => osc1.start()}>start osc</button>
     <button onClick={() => osc1.stop()}>stop osc</button>
     <Osc1 
-    changeFreq={changeOsc1Freq} 
-    freq={osc1Freq} 
-    changeDetune={changeOsc1Detune}
-    detune = {osc1Detune}
+    change={changeOsc1}
+    settings={osc1Settings}
     changeType={changeOsc1Type}
     />
+    <Filter
+    change={changeFilter}
+    settings={filterSettings}
+    />
+
       
     </div>
   );
